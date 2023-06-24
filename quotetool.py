@@ -14,17 +14,26 @@ quote_key_presses = {}
 is_alphabet_char = False
 set_space = False
 alphabet_correct_char = True
+hastypedi = False
 # Callback function to replace the text input
 def replace_quotes(event):
     global is_alphabet_char
     global set_space
     global alphabet_correct_char
+    global hastypedi 
     
 
     if event.event_type == keyboard.KEY_DOWN:
         typed_char = event.name
         if re.match(r'^[a-zA-Z]$', typed_char):
             is_alphabet_char = True
+            if hastypedi == True and event.name != 'i':
+                    keyboard.send('backspace')
+                    keyboard.send('backspace')
+                    keyboard.send('i')
+                    keyboard.send(f'{event.name}')
+                    hastypedi = False
+                    
             
             if typed_char == 'i':
                 alphabet_correct_char = False
@@ -40,6 +49,8 @@ def replace_quotes(event):
         if event.name == 'i' and set_space == True:
                 keyboard.send('backspace')
                 keyboard.write('I')
+                hastypedi = True
+                
         
                 
             
@@ -62,11 +73,13 @@ def replace_quotes(event):
                     keyboard.write(closing_quote)
                     is_alphabet_char = False
                     quote_key_presses[event.name] = False
+                    hastypedi = False
                 else:
                     keyboard.write(opening_quote)
                     keyboard.write(closing_quote)
                     is_alphabet_char = False
                     quote_key_presses[event.name] = False
+                    hastypedi = False
 
                 # Reset the state
                 
